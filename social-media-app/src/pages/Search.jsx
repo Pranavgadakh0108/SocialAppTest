@@ -9,7 +9,9 @@ import {
   Box,
   CircularProgress,
   Alert,
-  Paper
+  Paper,
+  alpha,
+  useTheme
 } from '@mui/material'
 import { Search as SearchIcon, People } from '@mui/icons-material'
 import UserCard from '../components/UserCard'
@@ -19,6 +21,7 @@ import { useAuth } from '../context/AuthContext'
 const Search = () => {
   const [searchParams] = useSearchParams()
   const { currentUser } = useAuth()
+  const theme = useTheme()
   const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '')
   const [users, setUsers] = useState([])
   const [filteredUsers, setFilteredUsers] = useState([])
@@ -97,25 +100,41 @@ const Search = () => {
 
   return (
     <Container maxWidth="md" sx={{ py: 3 }}>
-      <Paper sx={{ p: 2, mb: 3 }}>
+      <Paper 
+        sx={{ 
+          p: 2, 
+          mb: 3,
+          borderRadius: 3,
+          border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+        }}
+      >
         <TextField
           fullWidth
           placeholder="Search by username or full name..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon />
-              </InputAdornment>
-            )
+          slotProps={{
+            input: {
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+              sx: { borderRadius: 2 }
+            }
           }}
           autoFocus
+          sx={{
+            '& .MuiOutlinedInput-root': {
+              borderRadius: 2,
+              backgroundColor: alpha(theme.palette.common.white, 0.05),
+            },
+          }}
         />
       </Paper>
       
       {error && (
-        <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError('')}>
+        <Alert severity="error" sx={{ mb: 2, borderRadius: 2 }} onClose={() => setError('')}>
           {error}
         </Alert>
       )}
@@ -127,7 +146,14 @@ const Search = () => {
       )}
       
       {!loading && searchQuery && filteredUsers.length === 0 && (
-        <Paper sx={{ textAlign: 'center', py: 8 }}>
+        <Paper 
+          sx={{ 
+            textAlign: 'center', 
+            py: 8,
+            borderRadius: 3,
+            border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+          }}
+        >
           <SearchIcon sx={{ fontSize: 64, color: 'text.secondary', mb: 2 }} />
           <Typography variant="h6" color="text.secondary" gutterBottom>
             No users found
@@ -140,7 +166,7 @@ const Search = () => {
       
       {!loading && filteredUsers.length > 0 && (
         <Box>
-          <Typography variant="h6" gutterBottom sx={{ mb: 2 }}>
+          <Typography variant="h6" gutterBottom sx={{ mb: 2, fontWeight: 600 }}>
             Search Results ({filteredUsers.length})
           </Typography>
           
@@ -155,7 +181,14 @@ const Search = () => {
       )}
       
       {!searchQuery && !initialLoading && (
-        <Paper sx={{ textAlign: 'center', py: 8 }}>
+        <Paper 
+          sx={{ 
+            textAlign: 'center', 
+            py: 8,
+            borderRadius: 3,
+            border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+          }}
+        >
           <People sx={{ fontSize: 64, color: 'text.secondary', mb: 2 }} />
           <Typography variant="h6" color="text.secondary" gutterBottom>
             Find Friends

@@ -43,6 +43,10 @@ const Login = () => {
     <Box sx={{ minHeight: '100vh', display: 'flex', alignItems: 'center', bgcolor: 'background.default' }}>
       <Container maxWidth="sm">
         <Paper elevation={3} sx={{ p: 4 }}>
+          <div style={{ textAlign: "center" }}>
+              <img src="amigos.png" alt="" height={150}/>
+          </div>
+          
           <Typography variant="h4" align="center" gutterBottom sx={{ fontWeight: 'bold', mb: 4 }}>
             Welcome Back
           </Typography>

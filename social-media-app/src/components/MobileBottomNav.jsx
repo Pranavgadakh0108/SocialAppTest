@@ -1,13 +1,16 @@
+
 // src/components/MobileBottomNav.jsx
-import { BottomNavigation, BottomNavigationAction, Paper } from '@mui/material'
-import { Home, Person, AddBox, Search, People } from '@mui/icons-material'
+import { BottomNavigation, BottomNavigationAction, Paper, alpha, useTheme } from '@mui/material'
+import { Home, Person, AddBox, Search, People, AddCircle } from '@mui/icons-material'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { motion } from 'framer-motion'
 
 const MobileBottomNav = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const { currentUser } = useAuth()
+  const theme = useTheme()
 
   const getValue = () => {
     if (location.pathname === '/home') return 0
@@ -18,6 +21,14 @@ const MobileBottomNav = () => {
     return 0
   }
 
+  const navItems = [
+    { label: 'Home', icon: <Home />, path: '/home', value: 0 },
+    { label: 'Profile', icon: <Person />, path: `/profile/${currentUser?.id}`, value: 1 },
+    { label: 'Create', icon: <AddCircle />, path: '/create-post', value: 2 },
+    { label: 'Search', icon: <Search />, path: '/search', value: 3 },
+    { label: 'People', icon: <People />, path: '/following', value: 4 },
+  ]
+
   return (
     <Paper
       sx={{
@@ -26,27 +37,50 @@ const MobileBottomNav = () => {
         left: 0,
         right: 0,
         zIndex: 1000,
-        display: { xs: 'block', sm: 'none' }
+        display: { xs: 'block', sm: 'none' },
+        bgcolor: alpha(theme.palette.background.paper, 0.95),
+        backdropFilter: 'blur(20px)',
+        borderTop: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
       }}
-      elevation={3}
+      elevation={0}
     >
       <BottomNavigation
         value={getValue()}
         onChange={(event, newValue) => {
-          switch(newValue) {
-            case 0: navigate('/home'); break
-            case 1: navigate(`/profile/${currentUser?.id}`); break
-            case 2: navigate('/create-post'); break
-            case 3: navigate('/search'); break
-            case 4: navigate('/following'); break
-          }
+          const item = navItems.find(i => i.value === newValue)
+          if (item) navigate(item.path)
+        }}
+        sx={{
+          height: 65,
+          '& .Mui-selected': {
+            color: theme.palette.primary.main,
+            '& .MuiBottomNavigationAction-label': {
+              fontSize: '0.75rem',
+            },
+          },
         }}
       >
-        <BottomNavigationAction label="Home" icon={<Home />} />
-        <BottomNavigationAction label="Profile" icon={<Person />} />
-        <BottomNavigationAction label="Create" icon={<AddBox />} />
-        <BottomNavigationAction label="Search" icon={<Search />} />
-        <BottomNavigationAction label="Following" icon={<People />} />
+        {navItems.map((item) => (
+          <BottomNavigationAction
+            key={item.value}
+            label={item.label}
+            icon={
+              <motion.div
+                whileTap={{ scale: 0.9 }}
+                transition={{ duration: 0.1 }}
+              >
+                {item.icon}
+              </motion.div>
+            }
+            value={item.value}
+            sx={{
+              '& .MuiBottomNavigationAction-label': {
+                fontSize: '0.7rem',
+                transition: 'all 0.2s ease',
+              },
+            }}
+          />
+        ))}
       </BottomNavigation>
     </Paper>
   )

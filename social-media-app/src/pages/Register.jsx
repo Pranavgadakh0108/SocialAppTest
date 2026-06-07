@@ -21,7 +21,7 @@ const Register = () => {
     username: '',
     email: '',
     password: '',
-    profileImageUrl: 'https://via.placeholder.com/150'
+    profileImageUrl: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'
   })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
